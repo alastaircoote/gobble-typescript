@@ -1,7 +1,54 @@
 var ts = require( 'typescript' );
 
+function enumOptionNames(enumType) {
+  var values = [];
+  for (var key in enumType) {
+    if (enumType.hasOwnProperty(key)) {
+      var element = enumType[key];
+      if(typeof element == 'number') {
+        values.push('"' + key + '"');
+      }
+    }
+  }
+  return values;
+}
+
+function parseEnum(value, enumName, enumType, defaultValue) {  
+  if(enumType[value] && typeof enumType[value] == 'number') {
+    return enumType[value];
+  }
+   
+  var defaultValueName = enumType[defaultValue];
+  console.warn(enumName+" type '"+value+"' is not supported. Defaulting to "+defaultValueName);
+  console.warn("Supported options are: "+enumOptionNames(enumType).join(', '));
+  return defaultValue;
+}
+
+function parseOptions(options)
+{
+  if(!options) {
+    return {};
+  }
+  
+  if(options.target) {
+    options.target = parseEnum(options.target, "ScriptTarget", ts.ScriptTarget, ts.ScriptTarget.ES5);
+  }
+  
+  if(options.module) {
+    options.module = parseEnum(options.module, "ModuleKind", ts.ModuleKind, ts.ModuleKind.CommonJS);
+  }
+  
+  if(options.jsx) {
+    options.jsx = parseEnum(options.jsx, "JsxEmit", ts.JsxEmit, ts.JsxEmit.React);
+  }
+  
+  return options;
+}
+
 module.exports = function compileTypeScript ( inputdir, outputdir, options, callback ) {
   var recursive = require('./readdir');
+  
+  options = parseOptions(options);
   
   options.rootDir = inputdir;
   options.outDir = outputdir;

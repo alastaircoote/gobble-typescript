@@ -14,18 +14,24 @@ npm i -D gobble-typescript
 
 ```js
 var gobble = require( 'gobble' );
-var ts = require( 'typescript' );
 
-module.exports = gobble( 'src' ).transform( 'typescript', { 
+module.exports = gobble( 'src' ).transform( 'typescript', {   
+  
+  // default option
+  target: 'ES3',
+  
+  // default option
+  module: 'CommonJS',
+  
+  // default option
+  jsx: 'React', 
+  
+  // remaining options are passed directly to the typescript compiler 
+  listFiles: true,
   noImplicitAny: false,
   sourceMap: false,
   declaration: false,
-  target: ts.ScriptTarget.ES5,
-  module: ts.ModuleKind.CommonJS,
-  removeComments: true,
-  jsx: ts.JsxEmit.React,
-  typescript: ts, 
-  listFiles: true
+  removeComments: true
 });
 ```
 

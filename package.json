@@ -1,10 +1,13 @@
 {
   "name": "gobble-typescript",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Compile TypeScript files with gobble and TypeScript",
   "author": "Kevin Thompson",
   "license": "MIT",
-  "repository": "https://github.com/kthompson/gobble-typescript",
+  "repository": {
+    "url": "https://github.com/kthompson/gobble-typescript",
+    "type": "git"
+  },
   "keywords": [
     "gobble",
     "gobble-plugin",
@@ -20,7 +23,7 @@
     "prepublish": "npm test"
   },
   "dependencies": {
-    "typescript": "^1.7.0-dev.20150827",
-    "minimatch": "^3.0.0"    
+    "minimatch": "^3.0.0",
+    "typescript": "^1.6.2"
   }
 }
