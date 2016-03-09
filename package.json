@@ -1,6 +1,6 @@
 {
   "name": "gobble-typescript",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Compile TypeScript files with gobble and TypeScript",
   "author": "Kevin Thompson",
   "license": "MIT",
@@ -23,7 +23,6 @@
     "prepublish": "npm test"
   },
   "dependencies": {
-    "minimatch": "^3.0.0",
-    "typescript": "^1.6.2"
+    "typescript": "^1.8.7"
   }
 }

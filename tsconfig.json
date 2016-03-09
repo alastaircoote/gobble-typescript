@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "CommonJS",
+    "jsx": "react",
+    "listFiles": true,
+    "noImplicitAny": false,
+    "sourceMap": false,
+    "declaration": false,
+    "removeComments": true
+  },
+
+  "filesGlob": [
+    "**/*.ts",
+    "!node_modules/**"
+  ]
+}
