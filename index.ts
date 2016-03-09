@@ -1,9 +1,5 @@
 import * as ts from 'typescript';
 
-export interface CompileTypeScriptOptions extends ts.CompilerOptions {
-  moduleNamePrefix?: string
-}
-
 function compileTypeScript (input, options : CompileTypeScriptOptions) {
   var moduleName = this.filename.replace(/\\/g, '/').replace(/.tsx?$/, '');
   if(options.moduleNamePrefix)
@@ -40,4 +36,8 @@ compileTypeScript.defaults = {
   ext: '.js'
 }
 
-export default compileTypeScript;
+export = compileTypeScript;
+
+export interface CompileTypeScriptOptions extends ts.CompilerOptions {
+  moduleNamePrefix?: string
+}

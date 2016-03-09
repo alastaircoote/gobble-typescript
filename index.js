@@ -31,5 +31,4 @@ compileTypeScript.defaults = {
     accept: ['.ts', '.tsx'],
     ext: '.js'
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = compileTypeScript;
+module.exports = compileTypeScript;
