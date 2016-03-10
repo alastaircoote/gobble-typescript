@@ -28,7 +28,7 @@ function compileTypeScript (input, options : CompileTypeScriptOptions) {
   if(result.diagnostics.length > 0)
     throw new Error( 'TypeScript compilation errors occurred.' );
 
-  return result.outputText;
+  return {code: result.outputText, map: result.sourceMapText};
 };
 
 compileTypeScript.defaults = {
