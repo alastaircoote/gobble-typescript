@@ -14,27 +14,15 @@ npm i -D gobble-typescript
 
 ```js
 var gobble = require( 'gobble' );
+var ts = require( 'typescript' );
 
-module.exports = gobble( 'src' ).transform( 'typescript', {   
-  
-  // default option
-  target: 'ES3',
-  
-  // default option
-  module: 'CommonJS',
-  
-  // default option
-  jsx: 'React', 
-  
-  // remaining options are passed directly to the typescript compiler 
-  listFiles: true,
-  noImplicitAny: false,
-  sourceMap: false,
-  declaration: false,
-  removeComments: true
+module.exports = gobble( 'src' ).transform( 'typescript', {
+
+  target: ts.ScriptTarget.ES2015,
+  module: ts.ModuleKind.ES2015,
+  jsx: ts.JsxEmit.React,
 });
 ```
-
 
 ## License
 

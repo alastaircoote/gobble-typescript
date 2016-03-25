@@ -1,43 +1,56 @@
-import * as ts from 'typescript';
+import * as ts from "typescript";
+import path = require('path');
 
-function compileTypeScript (input, options : CompileTypeScriptOptions) {
-  var moduleName = this.filename.replace(/\\/g, '/').replace(/.tsx?$/, '');
-  if(options.moduleNamePrefix)
-    moduleName = options.moduleNamePrefix + moduleName;
+const compileTypeScript: GobbleTransformer = function (inputDir, outputDir, options: ts.CompilerOptions, callback) {
+  const typescriptFile = /\.tsx?$/;
+  const sander = this.sander;
+  const emitDiagnostic = (diagnostic: ts.Diagnostic) => {
+    const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n");
 
-  var transpileOptions : ts.TranspileOptions = {
-    compilerOptions: options,
-    reportDiagnostics: true,
-    moduleName: moduleName
+    if (diagnostic.file) {
+      const {line, character} = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
+
+      if (diagnostic.category === ts.DiagnosticCategory.Error) {
+        callback({
+          file: diagnostic.file.fileName,
+          line: line + 1,
+          column: character + 1,
+          message: message
+        });
+
+        return true;
+      }
+
+      console.error(`Error: ${message} (${diagnostic.file.fileName}:${line + 1}:${character + 1})`);
+      return false;
+    }
+
+    if (diagnostic.category === ts.DiagnosticCategory.Error) {
+      callback({
+        message: diagnostic.messageText
+      });
+      return true;
+    }
+
+    console.error(`Error: ${message}`);
+    return false;
   };
 
-  var result = ts.transpileModule(input, transpileOptions);
+  return sander.lsr( inputDir ).then(files => {
+    options.outDir = outputDir;
+    options.rootDir = inputDir;
 
-  result.diagnostics.forEach((diagnostic) => {
-    if(diagnostic.file) {
-      var items = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
-      var line = items.line;
-      var character = items.character;
-      var message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-      console.warn(this.filename +" ("+(line + 1)+","+(character + 1)+"): "+message);
-    } else {
-      console.warn(this.filename + ": " + diagnostic.messageText);
-    }
+    let fileNames = files
+        .filter((file) => typescriptFile.test(file))
+        .map((file) => path.resolve(inputDir, file));
+
+    let program = ts.createProgram(fileNames, options);
+    if (program.emit().diagnostics.some(emitDiagnostic))
+      return;
+
+    if (ts.getPreEmitDiagnostics(program).some(emitDiagnostic))
+      return;
   });
-
-  if(result.diagnostics.length > 0)
-    throw new Error( 'TypeScript compilation errors occurred.' );
-
-  return {code: result.outputText, map: result.sourceMapText};
 };
 
-compileTypeScript.defaults = {
-  accept: ['.ts', '.tsx'],
-  ext: '.js'
-}
-
 export = compileTypeScript;
-
-export interface CompileTypeScriptOptions extends ts.CompilerOptions {
-  moduleNamePrefix?: string
-}
