@@ -23,6 +23,6 @@
     "prepublish": "npm test"
   },
   "dependencies": {
-    "typescript": "^1.8.7"
+    "typescript": "^2.0.0"
   }
 }
